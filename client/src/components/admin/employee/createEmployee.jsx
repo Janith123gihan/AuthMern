@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Navbar from '../navbar';
 
-const Signup =() =>{
+const CreateEmployee =() =>{
     const [data,setData ] = useState({
         firstName:"",
         lastName:"",
         email:"",
-        role:"2",
+        role:"1",
         password:"",
         gender:"",
         address:"",
@@ -23,10 +24,11 @@ const Signup =() =>{
     const handleSubmit = async(e) =>{
         e.preventDefault();
         try {
-            const url = "http://localhost:8080/api/users";
+            const url = "http://localhost:8080/all/employee/add";
             const { data:res } = await axios.post(url,data);
-
-            navigate("/customer");
+            
+            alert("Employee Created Succesful");
+            navigate("/allEmployees");
             console.log(res.message);
         } catch (error) {
             if(error.response &&
@@ -40,10 +42,12 @@ const Signup =() =>{
     const main_style = {
         borderStyle: "solid",
         borderRadius: "15px",
-        borderColor: "#038011"
+        borderColor: "black"
     }
     return(
-        <div className="container">
+        <div>
+            <Navbar/>
+            <div className="container">
             <div className="row  pt-2 justify-content-center">
                 <div className="col-12 col-sm-6 p-4 pt-1" style={main_style}>
                     <form className="" onSubmit={handleSubmit}>
@@ -139,13 +143,14 @@ const Signup =() =>{
                             {error}
                             </div>}
                         <button type="submit" className="btn btn-primary">
-                            Sign Up
+                            Register
                         </button>
                     </form>
                 </div>
             </div>
         </div>
+        </div>
     )
 };
 
-export default Signup;
+export default CreateEmployee;

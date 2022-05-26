@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Signup =() =>{
@@ -8,6 +8,7 @@ const Signup =() =>{
         password:""
     });
     const [error,setError ] = useState("");
+    const navigate = useNavigate();
 
     const handleChange = ({ currentTarget:input }) => {
         setData({...data,[input.name]:input.value });
@@ -18,7 +19,17 @@ const Signup =() =>{
             const url = "http://localhost:8080/api/auth";
             const { data:res } = await axios.post(url,data);
             localStorage.setItem("token",res.data);
-            window.location = "/";
+            localStorage.setItem('username', res.name)
+            console.log(res.name)
+            localStorage.setItem('address', res.address)
+            localStorage.setItem('phone', res.phone)
+            localStorage.setItem('id', res.id)
+            if(res.code === 200)
+                navigate("/admin");
+            if(res.code === 201)
+                navigate("/dashEmployee");
+            if(res.code === 202)
+                navigate("/customer");
         } catch (error) {
             if(error.response &&
                 error.response.status >= 400 &&
@@ -28,10 +39,15 @@ const Signup =() =>{
                 }
         }
     }
+    const main_style = {
+        borderStyle: "solid",
+        borderRadius: "15px",
+        borderColor: "black"
+    }
     return(
         <div className="container">
-            <div className="row">
-                <div className="col-12 col-sm-7 mt-4">
+            <div className="row mt-5 pt-5 justify-content-center">
+                <div className="col-12 col-sm-5 p-4 pt-1" style={main_style}>
                     <form className="" onSubmit={handleSubmit}>
                         <h1>Login to Your Account</h1>
                         <div className='mb-3'>
@@ -49,7 +65,7 @@ const Signup =() =>{
                         <div className='mb-3'>
                             <label for="password" class="form-label">Password</label>
                             <input
-                            type="text"
+                            type="password"
                             placeholder='Password'
                             name='password'
                             onChange={handleChange}
@@ -64,16 +80,17 @@ const Signup =() =>{
                         <button type="submit" className="btn btn-primary">
                             Sign In
                         </button>
+                        
                     </form>
-                </div>
-                <div className="col col-sm-5 mt-4">
-                    <h1>New Here?</h1>
-                    <Link to="/signup">
+                    &nbsp;
+                   <div>    
+                   <Link to="/signup">
                         <button type='button' className="btn btn-secondary">
-                            Sign Up
+                            Register
                         </button>
                     </Link>
-                </div>
+                   </div>                   
+                </div>                               
             </div>
         </div>
     )
